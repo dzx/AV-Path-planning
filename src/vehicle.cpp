@@ -64,7 +64,7 @@ Vehicle::Vehicle(vector<int> config, float x, float y, float s, float d, float d
 vector<Vehicle> Vehicle::choose_next_state(map<int, vector<Vehicle>> predictions) {
     /*
 
-    Here you can implement the transition_function code from the Behavior Planning Pseudocode
+    State transition function code, For now based on Udacity Self-Driving Car Behavior Planning Pseudocode
     classroom concept.
 
     INPUT: A predictions map. This is a map using vehicle id as keys with predicted
@@ -73,14 +73,6 @@ vector<Vehicle> Vehicle::choose_next_state(map<int, vector<Vehicle>> predictions
         the trajectory represents the vehicle one timestep in the future.
     OUTPUT: The the best (lowest cost) trajectory for the ego vehicle corresponding to the next ego vehicle state.
 
-    Functions that will be useful:
-    1. successor_states() - Uses the current state to return a vector of possible successor states for the finite
-       state machine.
-    2. generate_trajectory(string state, map<int, vector<Vehicle>> predictions) - Returns a vector of Vehicle objects
-       representing a vehicle trajectory, given a state and predictions. Note that trajectory vectors
-       might have size 0 if no possible trajectory exists for the state.
-    3. calculate_cost(Vehicle vehicle, map<int, vector<Vehicle>> predictions, vector<Vehicle> trajectory) - Included from
-       cost.cpp, computes the cost for a trajectory.
     */
 
   cout << "state: " << state;
@@ -110,9 +102,7 @@ vector<Vehicle> Vehicle::choose_next_state(map<int, vector<Vehicle>> predictions
 
 vector<string> Vehicle::successor_states() {
     /*
-    Provides the possible next states given the current state for the FSM
-    discussed in the course, with the exception that lane changes happen
-    instantaneously, so LCL and LCR can only transition back to KL.
+    Provides the possible next states given the current state.
     */
     vector<string> states;
     states.push_back("KL");
@@ -333,8 +323,8 @@ bool Vehicle::get_vehicle_ahead(map<int, vector<Vehicle>> predictions, int lane,
 
 vector<Vehicle> Vehicle::generate_predictions(int horizon) {
     /*
-    Generates predictions for non-ego vehicles to be used
-    in trajectory generation for the ego vehicle.
+    Generates predictions for other vehicles to be used
+    in trajectory generation for our vehicle.
     */
   vector<Vehicle> predictions;
     for(int i = 0; i < horizon; i++) {
@@ -351,7 +341,7 @@ vector<Vehicle> Vehicle::generate_predictions(int horizon) {
 
 void Vehicle::realize_next_state(vector<Vehicle> trajectory) {
     /*
-    Sets state and kinematics for ego vehicle using the last state of the trajectory.
+    Sets state and kinematics for our vehicle using the last state of the trajectory.
     */
     Vehicle next_state = trajectory[1];
     this->state = next_state.state;
